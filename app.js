@@ -15,8 +15,9 @@ const createDOMPurify = require("dompurify");
 const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 const marked = require("marked");
+const path = require("path");
 const apiDocsHtml = DOMPurify.sanitize(
-  marked.parse(fs.readFileSync("README.md", "utf8")),
+  marked.parse(fs.readFileSync(path.join(process.cwd(), "README.md"), "utf8")),
 );
 const numShares = 15;
 
@@ -121,7 +122,7 @@ if (_.contains(arguments, "--dump")) {
 
 // Configuration and middleware
 
-nunjucks.configure("views/", {
+nunjucks.configure(path.join(process.cwd(), "views/"), {
   autoescape: true,
   express: app,
 });
