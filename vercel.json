@@ -8,6 +8,26 @@
   },
   "routes": [
     {
+      "src": "/js/(.*)",
+      "dest": "/public/js/$1"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/public/css/$1"
+    },
+    {
+      "src": "/img/(.*)",
+      "dest": "/public/img/$1"
+    },
+    {
+      "src": "/font/(.*)",
+      "dest": "/public/font/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/public/img/favicon.png"
+    },
+    {
       "src": "/graphql",
       "dest": "app.js"
     },

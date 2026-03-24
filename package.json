@@ -5,6 +5,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "build": "npm run scss",
     "test": "jest",
     "start": "NODE_ENV=development nodemon server.js",
     "start-graphql": "NODE_ENV=development nodemon graphql/index.js",
