@@ -8,7 +8,7 @@
 npm install
 ```
 
-Run script to implement SASS styling from compass.
+Run script to compile SASS styling.
 
 ```
 npm run scss
@@ -22,7 +22,7 @@ npm start
 
 ### Running into issues
 
-This API was built with Node version 10. If you experience issues while installing npm dependencies, try running install process with an older version of node. Versions 15 and 12 are able to run server.
+This API is compatible with Node version 22 and later. If you experience issues while installing npm dependencies, try running the install process with a modern LTS version of Node.js.
 
 See [Node Version Manager](https://github.com/nvm-sh/nvm) for a great tool for switching between node versions.
 

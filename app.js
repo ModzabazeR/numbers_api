@@ -10,8 +10,14 @@ const favicon = require("serve-favicon");
 const errorhandler = require("errorhandler");
 const nunjucks = require("nunjucks");
 const mousewheel = require("jquery-mousewheel");
+const { JSDOM } = require("jsdom");
+const createDOMPurify = require("dompurify");
+const window = new JSDOM("").window;
+const DOMPurify = createDOMPurify(window);
 const marked = require("marked");
-const apiDocsHtml = marked(fs.readFileSync("README.md", "utf8"));
+const apiDocsHtml = DOMPurify.sanitize(
+  marked.parse(fs.readFileSync("README.md", "utf8")),
+);
 const numShares = 15;
 
 const fact = require("./models/fact.js");
@@ -103,7 +109,7 @@ nunjucks.configure("views/", {
 });
 
 app.use(
-  cors({ allowedHeaders: ["X-Requested-With", "Accept", "Content-Type"] })
+  cors({ allowedHeaders: ["X-Requested-With", "Accept", "Content-Type"] }),
 );
 app.use(express.json());
 // app.set("views", __dirname + "/views");
@@ -113,7 +119,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   favicon(__dirname + "/public/img/favicon.png", {
     maxAge: 2592000000,
-  })
+  }),
 );
 
 if (nodeEnv === "development") {

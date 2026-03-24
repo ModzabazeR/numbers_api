@@ -1,15 +1,7 @@
-const { resolvers } = require("../../graphql/schema/Resolvers");
-const EasyGraphQLTester = require("easygraphql-tester");
-const { typeDefs } = require("../../graphql/schema/TypeDefs");
-const { schema } = require("../../graphql/schema/Schema");
+const { graphql } = require("graphql");
+const { schema } = require("../../graphql/schema/schema");
 
 describe("Test getNumberFacts queries", () => {
-  let tester;
-
-  beforeEach(() => {
-    tester = new EasyGraphQLTester(schema);
-  });
-
   it("Should return the correct query result", async () => {
     const query = `
             {
@@ -21,13 +13,17 @@ describe("Test getNumberFacts queries", () => {
             }
         `;
 
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(Object.keys(result).length).toEqual(3);
-    expect(result.trivia.length).toEqual(4);
-    expect(result.math.length).toEqual(4);
-    expect(result.year.length).toEqual(4);
+    const data = result.data.getNumberFacts;
+
+    expect(Object.keys(data).length).toEqual(3);
+    expect(data.trivia.length).toEqual(4);
+    expect(data.math.length).toEqual(4);
+    expect(data.year.length).toEqual(4);
   });
 
   it("If number does not have fact, response includes default message ", async () => {
@@ -38,14 +34,18 @@ describe("Test getNumberFacts queries", () => {
                 }
             }
         `;
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(Object.keys(result).length).toEqual(1);
-    expect(result.trivia[0]).toEqual(
+    const data = result.data.getNumberFacts;
+
+    expect(Object.keys(data).length).toEqual(1);
+    expect(data.trivia[0]).toEqual(
       expect.stringContaining(
-        "Submit one at github.com/rithmschool/numbers_api"
-      )
+        "Submit one at github.com/rithmschool/numbers_api",
+      ),
     );
   });
 
@@ -57,12 +57,16 @@ describe("Test getNumberFacts queries", () => {
                 }
             }
         `;
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(Object.keys(result).length).toEqual(1);
-    expect(result.math[0]).toEqual(
-      "the number of trees on 15 vertices with diameter 7"
+    const data = result.data.getNumberFacts;
+
+    expect(Object.keys(data).length).toEqual(1);
+    expect(data.math[0]).toEqual(
+      "the number of trees on 15 vertices with diameter 7",
     );
   });
 
@@ -75,16 +79,20 @@ describe("Test getNumberFacts queries", () => {
     }
     `;
 
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts.date;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(result[0]).toEqual(expect.stringContaining("February 29th"));
-    expect(result[0]).toEqual(
+    const data = result.data.getNumberFacts.date;
+
+    expect(data[0]).toEqual(expect.stringContaining("February 29th"));
+    expect(data[0]).toEqual(
       expect.not.stringContaining(
-        "Submit one at github.com/rithmschool/numbers_api"
-      )
+        "Submit one at github.com/rithmschool/numbers_api",
+      ),
     );
-    expect(result.length).toBeGreaterThan(1);
+    expect(data.length).toBeGreaterThan(1);
   });
 
   it("Should return the correct date for negative numbers", async () => {
@@ -96,16 +104,20 @@ describe("Test getNumberFacts queries", () => {
     }
     `;
 
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts.date;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(result[0]).toEqual(expect.stringContaining("December 29th"));
-    expect(result[0]).toEqual(
+    const data = result.data.getNumberFacts.date;
+
+    expect(data[0]).toEqual(expect.stringContaining("December 29th"));
+    expect(data[0]).toEqual(
       expect.not.stringContaining(
-        "Submit one at github.com/rithmschool/numbers_api"
-      )
+        "Submit one at github.com/rithmschool/numbers_api",
+      ),
     );
-    expect(result.length).toBeGreaterThan(1);
+    expect(data.length).toBeGreaterThan(1);
   });
 
   it("Should return the correct date for numbers past first year", async () => {
@@ -117,15 +129,19 @@ describe("Test getNumberFacts queries", () => {
     }
     `;
 
-    let result = await tester.graphql(query);
-    result = result.data.getNumberFacts.date;
+    const result = await graphql({
+      schema,
+      source: query,
+    });
 
-    expect(result[0]).toEqual(expect.stringContaining("December 13th"));
-    expect(result[0]).toEqual(
+    const data = result.data.getNumberFacts.date;
+
+    expect(data[0]).toEqual(expect.stringContaining("December 13th"));
+    expect(data[0]).toEqual(
       expect.not.stringContaining(
-        "Submit one at github.com/rithmschool/numbers_api"
-      )
+        "Submit one at github.com/rithmschool/numbers_api",
+      ),
     );
-    expect(result.length).toBeGreaterThan(1);
+    expect(data.length).toBeGreaterThan(1);
   });
 });

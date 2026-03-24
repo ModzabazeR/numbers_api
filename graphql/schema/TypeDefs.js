@@ -1,6 +1,4 @@
-const { gql } = require("apollo-server-express");
-
-const typeDefs = gql`
+const typeDefs = `#graphql
 
   type Number {
     math: [String!]!
@@ -17,5 +15,3 @@ const typeDefs = gql`
 `;
 
 module.exports = { typeDefs };
-
-

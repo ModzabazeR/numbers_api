@@ -79,7 +79,7 @@ function reader_norm(out, pathname, callback) {
       });
     } catch (e) {
       console.error(
-        `Exception while reading file ${pathname + file}: ${e.message}`
+        `Exception while reading file ${pathname + file}: ${e.message}`,
       );
       return;
     }
@@ -87,7 +87,7 @@ function reader_norm(out, pathname, callback) {
       numbers = JSON.parse(data);
     } catch (e) {
       console.error(
-        `Exception while parsing file, ${pathname + file}: ${e.message}`
+        `Exception while parsing file, ${pathname + file}: ${e.message}`,
       );
       return;
     }
@@ -97,7 +97,14 @@ function reader_norm(out, pathname, callback) {
 
         // if parsed data from numbers is valid
         // proceed to element normalization
-        if (normalizeNumberData(float_key, number_data)) {
+        if (
+          normalizeNumberData(
+            float_key,
+            number_data,
+            number_key,
+            pathname + file,
+          )
+        ) {
           // if key doesnt current exist in object, create it.
           if (!(float_key in out)) {
             out[float_key] = [];
@@ -111,7 +118,7 @@ function reader_norm(out, pathname, callback) {
               console.warn(
                 `Skipping empty file (element.text is falsey) ${
                   pathname + file
-                }`
+                }`,
               );
               return;
             }
@@ -165,7 +172,7 @@ function reader_manual(outs, pathname, callbacks) {
       });
     } catch (e) {
       console.error(
-        `Exception while reading file, ${pathname + file}: ${e.message}`
+        `Exception while reading file, ${pathname + file}: ${e.message}`,
       );
       return;
     }
@@ -182,7 +189,7 @@ function reader_manual(outs, pathname, callbacks) {
       let matches = regex.exec(line);
       if (!matches) {
         console.warn(
-          `Skipping invalid line ${line} in file ${pathname + file}`
+          `Skipping invalid line ${line} in file ${pathname + file}`,
         );
         continue;
       }
@@ -191,7 +198,7 @@ function reader_manual(outs, pathname, callbacks) {
         console.warn(
           `Skipping invaid number ${number} in file ${
             pathname + file
-          } on line: ${line}`
+          } on line: ${line}`,
         );
         continue;
       }
@@ -199,7 +206,7 @@ function reader_manual(outs, pathname, callbacks) {
       // y -> year, d -> date, m -> math, t -> trivia
       if (type !== "y" && type !== "d" && type !== "m" && type !== "t") {
         console.error(
-          `Invalid fact type in file: ${pathname + file} on line: ${line}`
+          `Invalid fact type in file: ${pathname + file} on line: ${line}`,
         );
         continue;
       }
@@ -208,7 +215,7 @@ function reader_manual(outs, pathname, callbacks) {
       if (!text || text.length === 0) {
         // checks to see if a fact exists
         console.warn(
-          `Skipping empty fact in file: ${pathname + file} on line: ${line}`
+          `Skipping empty fact in file: ${pathname + file} on line: ${line}`,
         );
         continue;
       }
@@ -242,12 +249,14 @@ function reader_manual(outs, pathname, callbacks) {
  *
  * @param {num} key - parsed number from file
  * @param {object} value - array of objects, where each obj is a number fact
+ * @param {string} numberKey - the original string key from the JSON
+ * @param {string} filePath - the path to the file being processed
  * @returns true if data is valid, false otherwise
  */
-function normalizeNumberData(key, value) {
+function normalizeNumberData(key, value, numberKey, filePath) {
   if (isNaN(key)) {
     console.warn(
-      `Skipping invalid number_key, ${number_key} in file ${pathname + file}`
+      `Skipping invalid number_key, ${numberKey} in file ${filePath}`,
     );
     return false;
   }

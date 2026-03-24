@@ -1,53 +1,61 @@
 {
   "name": "numbers_api",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "test": "jest",
     "start": "NODE_ENV=development nodemon server.js",
     "start-graphql": "NODE_ENV=development nodemon graphql/index.js",
     "start-prod": "NODE_ENV=production forever -a start server.js",
     "stop": "forever stopall",
-    "scss": "node-sass public/sass -o public/css",
-    "dangerously-stop-running-node-servers": "sudo pkill node || true; npm run stop",
+    "scss": "sass public/sass:public/css",
+    "dangerously-stop-running-node-servers": "pkill node || true; npm run stop",
     "transfer": "npm run scss; rsync -avz --exclude .git --exclude logs/ --exclude suggestions.json --stats --progress . numbers:~/www",
     "deploy": "npm run transfer; ssh numbers 'cd /home/numbers/www && nohup make start &>> deploy.log < /dev/null &'; ssh numbers 'tail -n 200 /home/numbers/www/deploy.log'",
     "dump-facts": "NODE_PATH=/usr/local/lib/node_modules node server.js --dump",
-    "count-facts": "grep -c '[a-zA-Z]' facts-dump/*.txt && grep '[a-zA-Z]' facts-dump/*.txt | wc -l"
+    "count-facts": "grep -c '[a-zA-Z]' facts-dump/*.txt && grep '[a-zA-Z]' facts-dump/*.txt | wc -l",
+    "prepare": "husky"
   },
   "main": "server.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm test"
-    }
-  },
   "lint-staged": {
     "*.{js,css,md}": "pretty-quick --staged"
   },
+  "overrides": {
+    "braces": "^3.0.3",
+    "minimist": "^1.2.8",
+    "micromatch": "^4.0.8",
+    "nconf": "^0.12.1",
+    "@tootallnate/once": "^3.0.1"
+  },
   "dependencies": {
-    "apollo-server-express": "^2.24.0",
+    "@apollo/server": "^4.11.3",
+    "body-parser": "^1.20.3",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "easygraphql-tester": "^6.0.1",
+    "dompurify": "^3.2.4",
+    "dotenv": "^16.4.7",
     "errorhandler": "^1.5.1",
-    "express": "^4.17.1",
-    "forever": "^3.0.0",
-    "graphql": "^15.5.0",
-    "graphql-tools": "^7.0.5",
-    "jquery-mousewheel": "^3.1.4",
-    "marked": "^1.1.0",
-    "node-sass": "^4.14.1",
-    "nodemon": "^2.0.6",
-    "nunjucks": "^3.2.1",
+    "express": "^4.21.2",
+    "forever": "^4.0.3",
+    "graphql": "^16.10.0",
+    "graphql-tools": "^9.0.13",
+    "jquery-mousewheel": "^3.1.13",
+    "jsdom": "^26.0.0",
+    "marked": "^15.0.7",
+    "nodemon": "^3.1.9",
+    "nunjucks": "^3.2.4",
+    "sass": "^1.85.1",
     "serve-favicon": "^2.5.0",
-    "underscore": ">= 1.12.1"
+    "underscore": "^1.13.7"
   },
   "devDependencies": {
-    "husky": "^4.2.5",
-    "jest": "^26.0.1",
-    "lint-staged": "^10.2.9",
-    "prettier": "^2.0.5",
-    "pretty-quick": "^2.0.1",
-    "supertest": "^4.0.2"
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.1",
+    "pretty-quick": "^4.0.0",
+    "supertest": "^7.0.0"
   }
 }
