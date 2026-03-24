@@ -26,8 +26,26 @@ const { numRoutes } = require("./routes/numbers.js");
 const utils = require("./public/js/shared_utils.js");
 require("dotenv").config();
 
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@apollo/server/express4");
+const { typeDefs } = require("./graphql/schema/TypeDefs");
+const { resolvers } = require("./graphql/schema/Resolvers");
+
 const nodeEnv = process.env.NODE_ENV || "development";
 const app = new express();
+
+async function setupGraphQL() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+  await server.start();
+  app.use("/graphql", cors(), express.json(), expressMiddleware(server));
+}
+
+setupGraphQL().catch((err) => {
+  console.error("Failed to start Apollo Server", err);
+});
 
 // fake number of viistors
 // var BASE_VISITOR_TIME = new Date(1330560000000);
