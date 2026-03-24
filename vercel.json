@@ -1,12 +1,11 @@
 {
   "version": 2,
   "name": "numbers-api",
-  "builds": [
-    {
-      "src": "app.js",
-      "use": "@vercel/node"
+  "functions": {
+    "app.js": {
+      "includeFiles": "{models,views,public}/**"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/graphql",
@@ -16,10 +15,5 @@
       "src": "/(.*)",
       "dest": "app.js"
     }
-  ],
-  "functions": {
-    "app.js": {
-      "includeFiles": ["models/**", "views/**", "public/**", "README.md"]
-    }
-  }
+  ]
 }
